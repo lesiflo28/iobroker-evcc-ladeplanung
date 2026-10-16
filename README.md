@@ -1,5 +1,7 @@
 # ioBroker Ladeplanung – E-Auto nach Zielort laden
 
+> „Dieser Text/Beitrag wurde mit Hilfe von KI erzeugt“
+
 ioBroker-Skript (JavaScript-Adapter), das aus einem Fahrtziel einen Ladeplan für [evcc](https://evcc.io) macht.
 Ziel eingeben, das Skript berechnet die Strecke und den nötigen Akkustand. Dann legt es in evcc einen Plan an, der im günstigen Nachttarif lädt.
 
