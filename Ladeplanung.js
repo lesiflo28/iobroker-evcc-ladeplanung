@@ -2,7 +2,7 @@
  * Ladeplanung E-Auto mit Zielort -> evcc-Ladeplan im günstigen Nachttarif
  * Version 2.0 – 2026-10-16
  *
- * Projekt: https://github.com/<DEIN-GITHUB-NAME>/iobroker-ladeplanung
+ * Projekt: https://github.com/lesiflo28/iobroker-evcc-ladeplanung
  *
  * Funktion:
  *  - Zielort eingeben (Adresse, Ort oder "lat,lon"), in der Karte antippen oder aus Favoriten /
