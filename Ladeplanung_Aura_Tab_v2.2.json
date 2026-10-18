@@ -1,0 +1,229 @@
+{
+ "_type": "aura-tab",
+ "_version": 1,
+ "grid": {
+  "rowHeight": 20,
+  "snapX": 60,
+  "gap": 8
+ },
+ "tab": {
+  "name": "Ladeplanung",
+  "widgets": [
+   {
+    "id": "w-lp-plan",
+    "type": "html",
+    "title": "Ladeplanung",
+    "datapoint": "",
+    "layout": "default",
+    "gridPos": {
+     "x": 0,
+     "y": 0,
+     "w": 10,
+     "h": 24
+    },
+    "options": {
+     "icon": "mdi:calendar-clock",
+     "showTitle": false,
+     "htmlContent": "<style>\n  :root { --bg:#1f2937; --fg:#fff; --mut:#9ca3af; --line:#374151; --field:#111827; --green:#22c55e; --red:#ef4444; --yel:#eab308; --bar:#d6d3d1; --bar2:#4b5563; }\n  * { box-sizing: border-box; }\n  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--fg); font: 14px/1.35 system-ui, -apple-system, \"Segoe UI\", sans-serif; }\n  #app { padding: 2px 4px 6px; }\n  .head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }\n  .head h2 { margin: 0; font-size: 18px; font-weight: 700; }\n  .head .sub { color: var(--mut); font-size: 13px; }\n  .grid { display: grid; grid-template-columns: 28px minmax(0,1.25fr) minmax(0,.85fr) minmax(0,1.35fr) 44px 26px; gap: 6px 10px; align-items: center; }\n  .lbl { font-size: 12px; color: var(--fg); opacity: .8; }\n  .no { color: var(--mut); font-size: 13px; }\n  select, input[type=time], .ddbtn, .ro { width: 100%; height: 34px; background: var(--field); color: var(--fg); border: 1px solid #4b5563; border-radius: 7px;\n    padding: 0 9px; font: inherit; font-size: 14px; appearance: none; -webkit-appearance: none; outline: none; }\n  select, .ddbtn { background-image: linear-gradient(45deg, transparent 50%, var(--fg) 50%), linear-gradient(135deg, var(--fg) 50%, transparent 50%);\n    background-position: calc(100% - 16px) 15px, calc(100% - 11px) 15px; background-size: 5px 5px; background-repeat: no-repeat; padding-right: 26px; }\n  select:focus, input:focus, .ddbtn:focus { border-color: var(--green); }\n  input[type=time]::-webkit-calendar-picker-indicator { filter: invert(1); opacity: .6; }\n  .ro { display: flex; align-items: center; border-style: dashed; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n  .ro small { color: var(--mut); margin-left: 6px; font-size: 12px; }\n  .ddbtn { display: flex; align-items: center; text-align: left; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n  .dd { position: relative; }\n  .ddpanel { position: absolute; z-index: 20; top: 38px; left: 0; min-width: 170px; background: var(--field); border: 1px solid #4b5563; border-radius: 8px; padding: 6px; box-shadow: 0 8px 24px rgba(0,0,0,.5); }\n  .ddpanel label { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; cursor: pointer; font-size: 14px; }\n  .ddpanel label:hover { background: #1f2937; }\n  .ddpanel input { accent-color: var(--green); width: 16px; height: 16px; }\n  .tgl { position: relative; width: 34px; height: 18px; border-radius: 9px; background: #4b5563; border: 0; cursor: pointer; padding: 0; justify-self: start; flex: none; }\n  .tgl::after { content: ''; position: absolute; top: 3px; left: 3px; width: 12px; height: 12px; border-radius: 50%; background: #1f2937; transition: left .15s; }\n  .tgl.on { background: var(--green); } .tgl.on::after { left: 19px; background: #fff; }\n  .tgl:disabled { opacity: .35; cursor: default; }\n  .del { background: none; border: 0; color: var(--fg); opacity: .8; cursor: pointer; padding: 3px; justify-self: start; }\n  .del:hover { color: var(--red); opacity: 1; }\n  .del svg { width: 19px; height: 19px; display: block; }\n  .sep { display: flex; align-items: center; gap: 12px; color: #d1d5db; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; margin: 12px 0 8px; }\n  .sep::before, .sep::after { content: ''; flex: 1; height: 1px; background: var(--line); }\n  .p1head { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }\n  .p1head .t { font-size: 13px; color: var(--mut); }\n  .seg { display: inline-flex; border: 1px solid #4b5563; border-radius: 8px; overflow: hidden; }\n  .seg button { background: none; border: 0; color: var(--mut); font: inherit; font-size: 13px; padding: 5px 12px; cursor: pointer; }\n  .seg button.on { background: var(--green); color: #052e16; font-weight: 600; }\n  .trip { grid-column: 2 / -1; font-size: 13px; color: var(--fg); display: flex; flex-direction: column; gap: 5px; margin-top: 2px; }\n  .trip .route { color: #d1d5db; }\n  .trip .route b { color: var(--fg); font-weight: 600; }\n  .trip .ctl { display: flex; align-items: center; gap: 8px 16px; flex-wrap: wrap; color: var(--mut); font-size: 13px; }\n  .trip .ctl label { display: inline-flex; align-items: center; gap: 7px; cursor: pointer; }\n  .trip .ctl select { width: auto; height: 28px; font-size: 13px; padding: 0 24px 0 8px; background-position: calc(100% - 14px) 12px, calc(100% - 9px) 12px; }\n  .trip .ctl a { color: var(--mut); text-decoration: underline; cursor: pointer; }\n  .st { font-size: 12px; color: var(--mut); }\n  .st.ok { color: var(--green); } .st.wait { color: var(--yel); } .st.err { color: var(--red); }\n  .note { grid-column: 2 / -1; font-size: 12px; color: var(--mut); margin-top: -2px; }\n  .note.warn { color: var(--yel); }\n  .foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }\n  .add { display: inline-flex; align-items: center; gap: 7px; background: none; border: 0; color: var(--fg); opacity: .85; font: inherit; font-size: 13px; cursor: pointer; padding: 8px 0 2px; }\n  .add:hover { opacity: 1; }\n  .strat { font-size: 13px; color: var(--mut); padding-top: 6px; }\n  .strat a { color: var(--mut); cursor: pointer; }\n  .strat b { text-decoration: underline; font-weight: 600; }\n  .stratbox { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 10px; margin-top: 6px; }\n  .stratbox .lbl { margin-bottom: 3px; }\n  .kpi { display: flex; justify-content: space-between; gap: 12px; }\n  .kpi .k { font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: #d1d5db; }\n  .kpi .v { font-size: 17px; font-weight: 700; color: var(--green); }\n  .kpi .v small { font-size: 13px; color: var(--fg); font-weight: 600; }\n  .kpi .r { text-align: right; }\n  .chart { position: relative; margin-top: 8px; height: 92px; }\n  .bars { position: absolute; left: 0; right: 0; top: 0; height: 56px; display: flex; align-items: flex-end; gap: 2px; }\n  .bars div { flex: 1; min-width: 1px; border-radius: 2px 2px 0 0; cursor: pointer; }\n  .bars div.sel { outline: 1px solid #fff; }\n  .axis { position: absolute; left: 0; right: 0; top: 61px; height: 30px; font-size: 12px; color: var(--mut); }\n  .axis span { position: absolute; transform: translateX(-50%); white-space: nowrap; text-align: center; line-height: 1.15; }\n  .pm { position: absolute; top: 56px; height: 22px; border-left: 1.5px solid var(--green); }\n  .pm span { position: absolute; left: 0; bottom: -4px; border-bottom: 1.5px solid var(--green); padding: 0 0 2px 6px; color: var(--green); font-size: 12px; white-space: nowrap; transform: translateY(100%); }\n  .tip { min-height: 16px; font-size: 12px; color: var(--mut); margin-top: 18px; display: flex; justify-content: space-between; gap: 10px; }\n  .tip .ok { color: var(--green); } .tip .err { color: var(--red); }\n  .empty { color: var(--mut); font-size: 13px; padding: 8px 0; }\n  @media (max-width: 560px) {\n    .grid { grid-template-columns: 20px minmax(0,1.1fr) minmax(0,1fr) minmax(0,1.2fr) 38px 22px; gap: 6px 6px; }\n    input[type=time]::-webkit-calendar-picker-indicator { display: none; }\n    select, input[type=time], .ddbtn, .ro { font-size: 13px; padding: 0 6px; height: 34px; }\n    select, .ddbtn { padding-right: 20px; background-position: calc(100% - 12px) 15px, calc(100% - 7px) 15px; }\n    .axis { font-size: 11px; } .bars { gap: 1px; }\n  }\n</style>\n<div id=\"app\"><div class=\"empty\">Warte auf Daten vom Skript „Ladeplanung“ (ab Version 2.2) …</div></div>\n<script>\n(function () {\n  var P = '0_userdata.0.Ladeplanung.';      // = CFG.BASE im Skript\n  var DPV = P + 'Plan_Ansicht_JSON', DPC = P + 'Plan_Befehl';\n  var api = window.aura;\n  var app = document.getElementById('app');\n  var WD = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'], ORDER = [1, 2, 3, 4, 5, 6, 0];\n  var WDL = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];\n  var MON = ['Jan.', 'Feb.', 'März', 'Apr.', 'Mai', 'Juni', 'Juli', 'Aug.', 'Sep.', 'Okt.', 'Nov.', 'Dez.'];\n  var PRE = [[0, 'keine'], [900, 'letzte 15 min'], [1800, 'letzte 30 min'], [3600, 'letzte 1 h'], [7200, 'letzte 2 h']];\n  var TRASH = '<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6\"/></svg>';\n\n  var data = null, draft = null, tdraft = null, rep = null, mode = 'ziel';\n  var openDd = -1, showStrat = false, selBar = -1, lastCmd = 0;\n\n  function pad(n) { return (n < 10 ? '0' : '') + n; }\n  function de(x, d) { return Number(x).toLocaleString('de-DE', { minimumFractionDigits: d, maximumFractionDigits: d }); }\n  function esc(s) { return String(s).replace(/[&<>\"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;' }[c]; }); }\n  function v(a, b) { var s = (b !== undefined) ? b : a; return (s && typeof s === 'object' && 'val' in s) ? s.val : s; }\n  function midnight(d) { var x = new Date(d); x.setHours(0, 0, 0, 0); return x; }\n  function hm(d) { return pad(d.getHours()) + ':' + pad(d.getMinutes()); }\n  function fmtDay(ms) { var d = new Date(ms); return WD[d.getDay()] + ' ' + d.getDate() + '.' + (d.getMonth() + 1) + '. ' + hm(d); }\n  function km(soc) { var k = data && data.vehicle ? data.vehicle.kmPerPct : 0; return k > 0 ? ' (' + Math.round(soc * k) + ' km)' : ''; }\n\n  function send(cmd) {\n    if (!api) return;\n    lastCmd = Date.now();\n    tip('Wird übertragen …');\n    api.setState(DPC, JSON.stringify(cmd)).catch(function (e) { tip('Fehler beim Schreiben: ' + e, true); });\n  }\n  function setDp(id, val) {\n    if (!api) return;\n    lastCmd = Date.now();\n    tip('Wird neu berechnet …');\n    api.setState(P + id, val).catch(function (e) { tip('Fehler beim Schreiben: ' + e, true); });\n  }\n  function tip(text, err) { var t = document.getElementById('msg'); if (t) { t.className = err ? 'err' : ''; t.textContent = text; } }\n\n  // ---------- Daten übernehmen ----------\n  function load(raw) {\n    var d; try { d = JSON.parse(raw || '{}'); } catch (e) { return; }\n    if (!d || !d.vehicle) { if (d && d.error) app.innerHTML = '<div class=\"empty\">' + esc(d.error) + '</div>'; return; }\n    data = d;\n    // Daten von vor der letzten eigenen Änderung: Eingaben behalten, nur unten auffrischen\n    if (lastCmd && (d.ts || 0) < lastCmd + 300 && draft && rep) { renderBottom(); return; }\n    mode = d.trip ? d.trip.mode : 'soc';\n    var s = d.single;\n    if (s && !(d.trip && d.trip.mode === 'ziel')) {\n      var t = new Date(s.time);\n      draft = { day: midnight(t).getTime(), time: hm(t), soc: s.soc, active: true };\n    } else if (!draft || draft.active) {\n      var tm = new Date(); tm.setDate(tm.getDate() + 1);\n      draft = { day: midnight(tm).getTime(), time: (d.defaults && d.defaults.time) || '06:00', soc: (d.defaults && d.defaults.soc) || 50, active: false };\n    }\n    if (d.trip) { var pt = new Date(d.trip.planTime); tdraft = { day: midnight(pt).getTime(), time: hm(pt) }; }\n    if (openDd < 0) rep = JSON.parse(JSON.stringify(d.repeating || []));\n    if (!isEditing()) render();\n    else renderBottom();\n  }\n  function isEditing() { var a = document.activeElement; return openDd >= 0 || (a && (a.tagName === 'INPUT' || a.tagName === 'SELECT')); }\n\n  // ---------- Bausteine ----------\n  function socOptions(cur) {\n    var h = '', seen = false;\n    for (var s = 5; s <= 100; s += 5) { if (s === cur) seen = true; h += '<option value=\"' + s + '\"' + (s === cur ? ' selected' : '') + '>' + s + ' %' + km(s) + '</option>'; }\n    if (!seen && cur > 0) h = '<option value=\"' + cur + '\" selected>' + cur + ' %' + km(cur) + '</option>' + h;\n    return h;\n  }\n  function dayOptions(dayMs) {\n    var h = '', today = midnight(new Date()).getTime(), found = false;\n    for (var i = 0; i < 8; i++) {\n      var d = new Date(today); d.setDate(d.getDate() + i);\n      var ms = d.getTime(), sel = ms === dayMs; if (sel) found = true;\n      var tag = i === 0 ? 'heute' : i === 1 ? 'morgen' : WD[d.getDay()];\n      h += '<option value=\"' + ms + '\"' + (sel ? ' selected' : '') + '>' + d.getDate() + '. ' + MON[d.getMonth()] + ' (' + tag + ')</option>';\n    }\n    if (!found && dayMs) { var x = new Date(dayMs); h += '<option value=\"' + dayMs + '\" selected>' + x.getDate() + '. ' + MON[x.getMonth()] + ' (' + WD[x.getDay()] + ')</option>'; }\n    return h;\n  }\n  function daysLabel(days) {\n    var ds = ORDER.filter(function (d) { return days.indexOf(d) >= 0; });\n    if (!ds.length) return 'keine Tage';\n    if (ds.length === 7) return 'täglich';\n    if (ds.length === 5 && ds.join() === '1,2,3,4,5') return 'Mo – Fr';\n    if (ds.length === 2 && ds.join() === '6,0') return 'Wochenende';\n    var idx = ds.map(function (d) { return ORDER.indexOf(d); }), run = true;\n    for (var i = 1; i < idx.length; i++) if (idx[i] !== idx[i - 1] + 1) run = false;\n    if (run && ds.length >= 3) return WD[ds[0]] + ' – ' + WD[ds[ds.length - 1]];\n    return ds.map(function (d) { return WD[d]; }).join(', ');\n  }\n  function toIso(day, time) { var p = time.split(':'), t = new Date(day); t.setHours(+p[0], +p[1], 0, 0); return t; }\n  function statusClass(s) {\n    if (/^Fehler/.test(s)) return 'err';\n    if (/^Plan aktiv|^Kein Laden nötig/.test(s)) return 'ok';\n    if (/^Vorgemerkt|^Suche|⚠/.test(s)) return 'wait';\n    return '';\n  }\n\n  // ---------- Darstellung ----------\n  function render() {\n    if (!data) return;\n    var d = data, tr = d.trip, h = '';\n    h += '<div class=\"head\"><h2>Ladeplanung: ' + esc(d.vehicle.title) + '</h2><span class=\"sub\">SoC ' + Math.round(d.vehicle.soc || 0) + ' %' +\n         (d.vehicle.limitSoc ? ' · Limit ' + d.vehicle.limitSoc + ' %' : '') + (d.vehicle.connected ? ' · angesteckt' : ' · nicht angesteckt') + '</span></div>';\n\n    // #1 Einzelplan\n    if (tr) {\n      h += '<div class=\"p1head\"><span class=\"t\">Einzelplan</span><span class=\"seg\">' +\n           '<button data-m=\"ziel\" class=\"' + (mode === 'ziel' ? 'on' : '') + '\">nach Zielort</button>' +\n           '<button data-m=\"soc\" class=\"' + (mode === 'soc' ? 'on' : '') + '\">Ladeziel %</button></span></div>';\n    }\n    h += '<div class=\"grid\"><span></span><span class=\"lbl\">' + (mode === 'ziel' ? 'Abfahrt' : 'Tag') + '</span><span class=\"lbl\">Zeit</span><span class=\"lbl\">Ladeziel</span><span class=\"lbl\">Aktiv</span><span></span>';\n    if (tr && mode === 'ziel') {\n      var tgt = tr.zielSet && tr.target > 0 ? tr.target + ' %' + km(tr.target) : '–';\n      h += '<span class=\"no\">#1</span><select data-t=\"day\">' + dayOptions(tdraft.day) + '</select>' +\n           '<input type=\"time\" data-t=\"time\" value=\"' + tdraft.time + '\">' +\n           '<div class=\"ro\" title=\"aus Strecke, Verbrauch und Mindest-SoC berechnet\">' + tgt + (tr.zielSet ? '<small>berechnet</small>' : '') + '</div>' +\n           '<button class=\"tgl' + (tr.active ? ' on' : '') + '\" data-t=\"active\"' + (tr.zielSet || tr.active ? '' : ' disabled') + ' title=\"Zielort-Plan ein/aus\"></button><span></span>';\n      h += '<div class=\"trip\">';\n      if (tr.zielSet) {\n        var tot = tr.km * (tr.rueck ? 2 : 1);\n        h += '<div class=\"route\">' + esc(tr.start) + ' → <b>' + esc(tr.ziel) + '</b> · ' + Math.round(tr.km) + ' km' + (tr.rueck ? ' × 2 = ' + Math.round(tot) + ' km' : '') +\n             (tr.hwKm ? ' (Autobahn ' + Math.round(tr.hwKm * (tr.rueck ? 2 : 1)) + ' km)' : '') +\n             (tr.cons ? ' · Ø ' + de(tr.cons, 1) + ' kWh/100 km' : '') + '</div>';\n      } else {\n        h += '<div class=\"route\">Kein Ziel gewählt – Zielort eingeben oder in der Karte antippen.</div>';\n      }\n      h += '<div class=\"ctl\"><label><button class=\"tgl' + (tr.rueck ? ' on' : '') + '\" data-t=\"rueck\"></button>Hin &amp; zurück</label>' +\n           '<label>Mindest-SoC nach der Fahrt <select data-t=\"minsoc\">';\n      for (var m = 0; m <= 30; m += 5) h += '<option value=\"' + m + '\"' + (m === Math.round(tr.minSoc) ? ' selected' : '') + '>' + m + ' %</option>';\n      if (Math.round(tr.minSoc) % 5) h += '<option value=\"' + tr.minSoc + '\" selected>' + tr.minSoc + ' %</option>';\n      h += '</select></label>' + (tr.abfahrt ? '<a data-t=\"auto\">Abfahrt zurück auf automatisch</a>' : '<span>Abfahrt automatisch (nächster Morgen)</span>') + '</div>';\n      if (tr.status) h += '<div class=\"st ' + statusClass(tr.status) + '\">' + esc(tr.status) + '</div>';\n      h += '</div>';\n    } else {\n      h += '<span class=\"no\">#1</span><select data-s=\"day\">' + dayOptions(draft.day) + '</select>' +\n           '<input type=\"time\" data-s=\"time\" value=\"' + draft.time + '\">' +\n           '<select data-s=\"soc\">' + socOptions(draft.soc) + '</select>' +\n           '<button class=\"tgl' + (draft.active ? ' on' : '') + '\" data-s=\"active\" title=\"Plan #1 ein/aus\"></button><span></span>';\n      if (d.single && d.singleFromScript) h += '<div class=\"note\">von der Zielort-Planung angelegt</div>';\n    }\n    h += '</div>';\n\n    // wiederholende Pläne\n    h += '<div class=\"sep\">Wiederholende Pläne</div>';\n    if (rep.length) {\n      h += '<div class=\"grid\"><span></span><span class=\"lbl\">Tage</span><span class=\"lbl\">Zeit</span><span class=\"lbl\">Ladeziel</span><span class=\"lbl\">Aktiv</span><span></span>';\n      rep.forEach(function (p, i) {\n        h += '<span class=\"no\">#' + (i + 2) + '</span>';\n        h += '<div class=\"dd\"><button class=\"ddbtn\" data-r=\"dd\" data-i=\"' + i + '\">' + daysLabel(p.weekdays) + '</button>';\n        if (openDd === i) {\n          h += '<div class=\"ddpanel\">' + ORDER.map(function (wd) {\n            return '<label><input type=\"checkbox\" data-r=\"wd\" data-i=\"' + i + '\" value=\"' + wd + '\"' + (p.weekdays.indexOf(wd) >= 0 ? ' checked' : '') + '>' + WDL[wd] + '</label>';\n          }).join('') + '</div>';\n        }\n        h += '</div>';\n        h += '<input type=\"time\" data-r=\"time\" data-i=\"' + i + '\" value=\"' + esc(p.time) + '\">';\n        h += '<select data-r=\"soc\" data-i=\"' + i + '\">' + socOptions(p.soc) + '</select>';\n        h += '<button class=\"tgl' + (p.active ? ' on' : '') + '\" data-r=\"active\" data-i=\"' + i + '\"' + (p.weekdays.length ? '' : ' disabled') + '></button>';\n        h += '<button class=\"del\" data-r=\"del\" data-i=\"' + i + '\" title=\"Plan löschen\">' + TRASH + '</button>';\n      });\n      h += '</div>';\n    }\n    // Hinzufügen + Strategie in einer Zeile\n    var st = d.strategy || {};\n    var stTxt = (st.continuous ? 'durchgehend' : 'günstigst') + (st.precondition ? ' · letzte ' + (st.precondition >= 3600 ? de(st.precondition / 3600, 0) + ' h' : Math.round(st.precondition / 60) + ' min') + ' am Stück' : '');\n    h += '<div class=\"foot\"><button class=\"add\" data-r=\"add\"><span style=\"font-size:20px;line-height:1\">+</span> Wiederholenden Plan hinzufügen</button>' +\n         '<span class=\"strat\"><a data-x=\"strat\"><b>Strategie:</b> ' + stTxt + ' ' + (showStrat ? '▴' : '▾') + '</a></span></div>';\n    if (showStrat) {\n      h += '<div class=\"stratbox\"><div><div class=\"lbl\">Optimierung</div><select data-x=\"cont\"><option value=\"0\"' + (st.continuous ? '' : ' selected') + '>günstigst (mit Pausen)</option>' +\n           '<option value=\"1\"' + (st.continuous ? ' selected' : '') + '>durchgehend (am Stück)</option></select></div>' +\n           '<div><div class=\"lbl\">Vor der Abfahrt am Stück laden</div><select data-x=\"pre\">' + PRE.map(function (o) {\n             return '<option value=\"' + o[0] + '\"' + (o[0] === (st.precondition || 0) ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select></div></div>';\n    }\n\n    h += '<div id=\"bottom\"></div>';\n    app.innerHTML = h;\n    renderBottom();\n  }\n\n  function renderBottom() {\n    var el = document.getElementById('bottom'); if (!el || !data) return;\n    var d = data, n = d.next, tr = d.trip, h = '';\n    h += '<div class=\"sep\">' + (n ? 'Nächster Plan: #' + n.id : 'Kein aktiver Plan') + '</div>';\n    if (!n && tr && tr.mode === 'ziel' && tr.active && !tr.sent && tr.sendFrom > Date.now()) {\n      h += '<div class=\"empty\" style=\"padding:0 0 4px\">Zielort-Plan geht ' + fmtDay(tr.sendFrom) + ' an evcc.</div>';\n    }\n    if (n) {\n      var dur = Math.floor((n.duration || 0) / 60);\n      var price = n.price == null ? '–' : (d.currency === 'EUR' ? de(n.price * 100, 1) + ' ct/kWh' : de(n.price, 3) + ' ' + esc(d.currency) + '/kWh');\n      h += '<div class=\"kpi\"><div><div class=\"k\">Ladedauer</div><div class=\"v\">' + Math.floor(dur / 60) + ':' + pad(dur % 60) + ' h <small>@ ' + de((n.power || 0) / 1000, 1) + ' kW</small></div></div>' +\n           '<div class=\"r\"><div class=\"k\">Energiepreis</div><div class=\"v\">' + price + '</div></div></div>';\n      if (n.overrun > 0) h += '<div class=\"note warn\" style=\"margin:4px 0 0\">⚠ Ziel wird ca. ' + Math.round(n.overrun / 60) + ' min zu spät erreicht</div>';\n      if (d.vehicle.limitSoc && n.soc > d.vehicle.limitSoc) h += '<div class=\"note warn\" style=\"margin:4px 0 0\">⚠ Ladelimit ' + d.vehicle.limitSoc + ' % liegt unter dem Planziel ' + n.soc + ' %</div>';\n    }\n    var c = d.chart || {}, p = c.p || [];\n    if (p.length) {\n      var max = 0; p.forEach(function (x) { if (x != null && x > max) max = x; });\n      var step = (c.step || 15) * 60000, N = p.length, pt = c.planTime;\n      h += '<div class=\"chart\"><div class=\"bars\">';\n      for (var i = 0; i < N; i++) {\n        var t = c.start + i * step, col = c.c[i] ? 'var(--green)' : (pt && t >= pt ? 'var(--bar2)' : 'var(--bar)');\n        var hh = p[i] == null ? 3 : Math.max(4, Math.round(p[i] / (max || 1) * 56));\n        h += '<div data-b=\"' + i + '\" class=\"' + (i === selBar ? 'sel' : '') + '\" style=\"height:' + hh + 'px;background:' + col + (p[i] == null ? ';opacity:.3' : '') + '\"></div>';\n      }\n      h += '</div><div class=\"axis\">';\n      for (var j = 0; j < N; j++) {\n        var tj = new Date(c.start + j * step);\n        if (tj.getMinutes() === 0 && tj.getHours() % 2 === 0) {\n          var pos = (j + .5) / N * 100;\n          if (pos > 2 && pos < 98) h += '<span style=\"left:' + pos + '%\">' + tj.getHours() + (tj.getHours() === 0 ? '<br>' + WD[tj.getDay()] : '') + '</span>';\n        }\n      }\n      h += '</div>';\n      if (pt && pt > c.start && pt <= c.start + N * step) {\n        var ptd = new Date(pt), ppos = (pt - c.start) / (N * step) * 100;\n        h += '<div class=\"pm\" style=\"left:' + ppos + '%\"><span' + (ppos > 75 ? ' style=\"left:auto;right:0;padding:0 6px 2px 0\"' : '') + '>' + WD[ptd.getDay()] + '., ' + hm(ptd) + '</span></div>';\n      }\n      h += '</div>';\n    } else {\n      h += '<div class=\"empty\">Keine Tarifdaten von evcc.</div>';\n    }\n    var m = '', cls = '';\n    if (d.error) { m = d.error; cls = 'err'; }\n    else if (d.msg && d.msg.text) { m = d.msg.text; cls = d.msg.ok ? 'ok' : 'err'; }\n    h += '<div class=\"tip\"><span id=\"msg\" class=\"' + cls + '\">' + esc(m) + '</span><span id=\"bar\">' + barText() + '</span><span>Stand ' + hm(new Date(d.ts)) + '</span></div>';\n    el.innerHTML = h;\n  }\n  function barText() {\n    var c = data && data.chart; if (!c || selBar < 0 || !c.p || selBar >= c.p.length) return '';\n    var t = new Date(c.start + selBar * (c.step || 15) * 60000);\n    return WD[t.getDay()] + ' ' + hm(t) + ' · ' + (c.p[selBar] == null ? '–' : de(c.p[selBar], 1) + ' ct') + (c.c[selBar] ? ' · Laden' : '');\n  }\n\n  // ---------- Bedienung ----------\n  function futureOk(t) { if (t.getTime() <= Date.now() + 60000) { tip('Zeitpunkt liegt in der Vergangenheit', true); return false; } return true; }\n  function singleCmd() { var t = toIso(draft.day, draft.time); return futureOk(t) ? { cmd: 'single', soc: draft.soc, time: t.toISOString() } : null; }\n  function sendRep() { send({ cmd: 'repeating', plans: rep.map(function (p) { return { weekdays: p.weekdays, time: p.time, tz: p.tz || (data.defaults && data.defaults.tz) || 'Europe/Berlin', soc: p.soc, active: p.active && p.weekdays.length > 0 }; }) }); }\n\n  function switchMode(m) {\n    if (!data || !data.trip || m === mode) return;\n    var tr = data.trip;\n    if (m === 'soc') {\n      if (tr.active && tr.zielSet && tr.target > 0) {\n        send({ cmd: 'mode', mode: 'soc', soc: tr.target, time: new Date(tr.planTime).toISOString() });\n        var t = new Date(tr.planTime);\n        draft = { day: midnight(t).getTime(), time: hm(t), soc: tr.target, active: true };\n      } else send({ cmd: 'mode', mode: 'soc' });\n    } else {\n      if (data.single && draft && draft.active) send({ cmd: 'mode', mode: 'ziel', time: new Date(data.single.time).toISOString() });\n      else send({ cmd: 'mode', mode: 'ziel' });\n    }\n    mode = m; render();\n  }\n\n  app.addEventListener('change', function (e) {\n    var el = e.target, s = el.getAttribute('data-s'), t = el.getAttribute('data-t'), r = el.getAttribute('data-r'), x = el.getAttribute('data-x'), i = +el.getAttribute('data-i');\n    if (s) {\n      if (s === 'day') draft.day = +el.value;\n      if (s === 'time') { if (!el.value) return; draft.time = el.value; }\n      if (s === 'soc') draft.soc = +el.value;\n      if (draft.active) { var c = singleCmd(); if (c) send(c); }\n    } else if (t === 'day' || t === 'time') {\n      if (t === 'day') tdraft.day = +el.value; else { if (!el.value) return; tdraft.time = el.value; }\n      var tt = toIso(tdraft.day, tdraft.time); if (futureOk(tt)) send({ cmd: 'trip', time: tt.toISOString() });\n    } else if (t === 'minsoc') { setDp('Puffer_Prozent', +el.value); }\n    else if (r === 'time') { if (!el.value) return; rep[i].time = el.value; sendRep(); }\n    else if (r === 'soc') { rep[i].soc = +el.value; sendRep(); }\n    else if (r === 'wd') {\n      var wd = +el.value, a = rep[i].weekdays.filter(function (z) { return z !== wd; });\n      if (el.checked) a.push(wd);\n      rep[i].weekdays = ORDER.filter(function (z) { return a.indexOf(z) >= 0; });\n      var b = app.querySelector('.ddbtn[data-i=\"' + i + '\"]'); if (b) b.textContent = daysLabel(rep[i].weekdays);\n    } else if (x === 'cont' || x === 'pre') {\n      var cont = app.querySelector('[data-x=\"cont\"]').value === '1', pre = +app.querySelector('[data-x=\"pre\"]').value;\n      send({ cmd: 'strategy', continuous: cont, precondition: pre });\n    }\n  });\n\n  app.addEventListener('click', function (e) {\n    if (e.target.closest('.ddpanel')) return;\n    var el = e.target.closest('[data-s],[data-t],[data-m],[data-r],[data-x],[data-b]'); if (!el) { closeDd(); return; }\n    var s = el.getAttribute('data-s'), t = el.getAttribute('data-t'), mm = el.getAttribute('data-m'), r = el.getAttribute('data-r'),\n        x = el.getAttribute('data-x'), b = el.getAttribute('data-b'), i = +el.getAttribute('data-i');\n    if (openDd >= 0 && r !== 'dd' && r !== 'wd') closeDd(true);\n    if (b !== null) { selBar = +b; var bt = document.getElementById('bar'); if (bt) bt.textContent = barText();\n      app.querySelectorAll('.bars div.sel').forEach(function (z) { z.className = ''; }); el.className = 'sel'; return; }\n    if (mm) { switchMode(mm); return; }\n    if (t === 'active') { var on = !data.trip.active; data.trip.active = on; send({ cmd: 'trip', active: on }); render(); return; }\n    if (t === 'rueck') { data.trip.rueck = !data.trip.rueck; setDp('Hin_und_zurueck', data.trip.rueck); render(); return; }\n    if (t === 'auto') { send({ cmd: 'trip', time: '' }); return; }\n    if (s === 'active') {\n      if (draft.active) { draft.active = false; send({ cmd: 'single_off' }); render(); }\n      else { var c = singleCmd(); if (c) { draft.active = true; send(c); render(); } }\n      return;\n    }\n    if (r === 'dd') { if (openDd === i) closeDd(); else { closeDd(true); openDd = i; render(); } return; }\n    if (r === 'wd') return;\n    if (r === 'active') { rep[i].active = !rep[i].active; sendRep(); render(); return; }\n    if (r === 'del') { rep.splice(i, 1); sendRep(); render(); return; }\n    if (r === 'add') {\n      rep.push({ weekdays: [1, 2, 3, 4, 5], time: (data.defaults && data.defaults.time) || '06:00', tz: (data.defaults && data.defaults.tz) || 'Europe/Berlin', soc: 80, active: false });\n      sendRep(); render(); return;\n    }\n    if (x === 'strat') { showStrat = !showStrat; render(); return; }\n  });\n  // Tage-Auswahl schließen = Änderung an evcc senden\n  function closeDd(silent) {\n    if (openDd < 0) return;\n    var i = openDd; openDd = -1;\n    var before = JSON.stringify((data.repeating || [])[i] ? data.repeating[i].weekdays : null);\n    if (rep[i] && JSON.stringify(rep[i].weekdays) !== before) { if (!rep[i].weekdays.length) rep[i].active = false; sendRep(); }\n    if (!silent) render();\n  }\n  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDd(); });\n  app.addEventListener('focusout', function () { setTimeout(function () { if (!isEditing() && data) render(); }, 400); });\n\n  if (!api) { app.innerHTML = '<div class=\"empty\">aura-API fehlt (htmlApi im Widget einschalten)</div>'; return; }\n  api.getState(DPV).then(function (s) { load(v(s)); }).catch(function () {});\n  api.subscribe(DPV, function (a, b) { load(v(a, b)); });\n  setTimeout(function () { api.setState(DPC, JSON.stringify({ cmd: 'refresh' })).catch(function () {}); }, 300);   // beim Öffnen frische Daten holen\n})();\n</script>\n",
+     "htmlApi": true,
+     "sandboxPreset": "standard",
+     "scrollable": true,
+     "mobileHeight": "px",
+     "mobileHeightPx": 720
+    },
+    "mobileOrder": 0
+   },
+   {
+    "id": "w-lp-ziel",
+    "type": "input",
+    "title": "Zielort",
+    "datapoint": "0_userdata.0.Ladeplanung.Zielort",
+    "layout": "default",
+    "gridPos": {
+     "x": 10,
+     "y": 0,
+     "w": 8,
+     "h": 3
+    },
+    "options": {
+     "icon": "mdi:map-marker-radius",
+     "submitMode": "submit",
+     "showSubmit": true,
+     "placeholder": "z. B. Hamburg Hbf oder Adresse",
+     "textAlign": "left"
+    },
+    "mobileOrder": 1
+   },
+   {
+    "id": "w-lp-favsel",
+    "type": "enum",
+    "title": "Favoriten",
+    "datapoint": "0_userdata.0.Ladeplanung.Zielort",
+    "layout": "compact",
+    "gridPos": {
+     "x": 10,
+     "y": 3,
+     "w": 4,
+     "h": 2
+    },
+    "options": {
+     "icon": "mdi:star-outline",
+     "entriesSource": "json",
+     "entriesDp": "0_userdata.0.Ladeplanung.Favoriten_JSON",
+     "entriesValueKey": "value",
+     "entriesLabelKey": "label",
+     "showSelect": true,
+     "showValue": false
+    },
+    "mobileOrder": 2
+   },
+   {
+    "id": "w-lp-lastsel",
+    "type": "enum",
+    "title": "Letzte Ziele",
+    "datapoint": "0_userdata.0.Ladeplanung.Zielort",
+    "layout": "compact",
+    "gridPos": {
+     "x": 14,
+     "y": 3,
+     "w": 4,
+     "h": 2
+    },
+    "options": {
+     "icon": "mdi:history",
+     "entriesSource": "json",
+     "entriesDp": "0_userdata.0.Ladeplanung.Letzte_Ziele_JSON",
+     "entriesValueKey": "value",
+     "entriesLabelKey": "label",
+     "showSelect": true,
+     "showValue": false
+    },
+    "mobileOrder": 3
+   },
+   {
+    "id": "w-lp-startauswahl",
+    "type": "enum",
+    "title": "Start auswählen",
+    "datapoint": "0_userdata.0.Ladeplanung.Startort",
+    "layout": "compact",
+    "gridPos": {
+     "x": 10,
+     "y": 5,
+     "w": 4,
+     "h": 2
+    },
+    "options": {
+     "icon": "mdi:home-switch-outline",
+     "entriesSource": "json",
+     "entriesDp": "0_userdata.0.Ladeplanung.Auswahl_Start_JSON",
+     "entriesValueKey": "value",
+     "entriesLabelKey": "label",
+     "showSelect": true,
+     "showValue": false
+    },
+    "mobileOrder": 4
+   },
+   {
+    "id": "w-lp-favtasten",
+    "type": "chips",
+    "title": "Favoriten",
+    "datapoint": "",
+    "layout": "default",
+    "gridPos": {
+     "x": 14,
+     "y": 5,
+     "w": 4,
+     "h": 2
+    },
+    "options": {
+     "chips": [
+      {
+       "id": "c-merken",
+       "label": "Merken",
+       "icon": "mdi:star-plus-outline",
+       "dp": "0_userdata.0.Ladeplanung.Favorit_Aktion",
+       "value": "merken"
+      },
+      {
+       "id": "c-loeschen",
+       "label": "Löschen",
+       "icon": "mdi:star-remove-outline",
+       "dp": "0_userdata.0.Ladeplanung.Favorit_Aktion",
+       "value": "loeschen"
+      }
+     ],
+     "showIcon": false,
+     "showTitle": false,
+     "align": "center"
+    },
+    "mobileOrder": 5
+   },
+   {
+    "id": "w-lp-karte",
+    "type": "html",
+    "title": "Start / Ziel in der Karte wählen",
+    "datapoint": "",
+    "layout": "default",
+    "gridPos": {
+     "x": 10,
+     "y": 7,
+     "w": 8,
+     "h": 14
+    },
+    "options": {
+     "icon": "mdi:map-search-outline",
+     "htmlContent": "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css\">\n<style>\n  html, body { margin: 0; padding: 0; height: 100%; background: #1f2937; }\n  #map { position: absolute; inset: 0; border-radius: 8px; }\n  #hint { position: absolute; left: 8px; bottom: 8px; z-index: 500; background: rgba(17,24,39,.85); color: #e5e7eb;\n          font: 12px/1.3 system-ui, sans-serif; padding: 4px 8px; border-radius: 6px; pointer-events: none; }\n  .lp-btn { display: block; margin-top: 6px; width: 100%; padding: 6px 8px; border: 0; border-radius: 6px; color: #fff;\n            font: 600 13px system-ui, sans-serif; cursor: pointer; }\n  .lp-ziel { background: #3b82f6; }\n  .lp-start { background: #16a34a; }\n  .lp-pop { font: 13px/1.35 system-ui, sans-serif; min-width: 170px; }\n  .leaflet-popup-content-wrapper, .leaflet-popup-tip { background: #1f2937; color: #fff; }\n  .leaflet-container a.leaflet-popup-close-button { color: #9ca3af; }\n</style>\n<div id=\"map\"></div>\n<div id=\"hint\">Tippen = Start oder Ziel wählen</div>\n<script src=\"https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js\"></script>\n<script>\n(function () {\n  var P = '0_userdata.0.Ladeplanung.';                 // Datenpunkt-Ordner (= CFG.BASE im Skript)\n  var api = window.aura;\n  var home = null, start = null, ziel = null, route = [], startIsHome = true;\n\n  function v(a, b) {\n    var s = (b !== undefined) ? b : a;\n    return (s && typeof s === 'object' && 'val' in s) ? s.val : s;\n  }\n  function pt(la, lo) { la = Number(la) || 0; lo = Number(lo) || 0; return (la && lo) ? [la, lo] : null; }\n\n  var map = L.map('map', { zoomControl: true, attributionControl: true }).setView([51.1657, 10.4515], 6);\n  // gleiche Kachelquelle wie das Aura-Karten-Widget (OpenStreetMap, ohne API-Key)\n  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {\n    maxZoom: 19, attribution: '&copy; OpenStreetMap'\n  }).addTo(map);\n\n  function dot(color, size) {\n    return L.divIcon({ className: '', iconSize: [size, size], iconAnchor: [size / 2, size / 2],\n      html: '<div style=\"width:' + size + 'px;height:' + size + 'px;border-radius:50%;background:' + color +\n            ';border:3px solid #fff;box-shadow:0 0 4px rgba(0,0,0,.6)\"></div>' });\n  }\n\n  var layers = [], pickMarker = null;\n  function draw() {\n    layers.forEach(function (l) { map.removeLayer(l); });\n    layers = [];\n    var s = start || home;\n    if (home && !startIsHome) layers.push(L.marker(home, { icon: dot('#9ca3af', 12) }).bindTooltip('Zuhause'));\n    if (route && route.length > 1) layers.push(L.polyline(route, { color: '#3b82f6', weight: 5, opacity: .85 }));\n    if (s) layers.push(L.marker(s, { icon: dot('#22c55e', 16) }).bindTooltip(startIsHome ? 'Start: Zuhause' : 'Start'));\n    if (ziel) layers.push(L.marker(ziel, { icon: dot('#ef4444', 18) }).bindTooltip('Ziel'));\n    layers.forEach(function (l) { l.addTo(map); });\n    var pts = [s, ziel].filter(Boolean);\n    if (route && route.length > 1) map.fitBounds(L.latLngBounds(route), { padding: [24, 24] });\n    else if (pts.length === 2) map.fitBounds(L.latLngBounds(pts), { padding: [24, 24] });\n    else if (pts.length === 1) map.setView(pts[0], 10);\n  }\n\n  function button(cls, text, dp, value) {\n    var b = document.createElement('button');\n    b.className = 'lp-btn ' + cls;\n    b.textContent = text;\n    b.onclick = function () {\n      b.disabled = true; b.textContent = 'Route wird berechnet …';\n      api.setState(P + dp, value).then(function () {\n        map.closePopup();\n        if (pickMarker) { map.removeLayer(pickMarker); pickMarker = null; }\n      }).catch(function (err) { b.textContent = 'Fehler: ' + err; });\n    };\n    return b;\n  }\n\n  map.on('click', function (e) {\n    var c = e.latlng.lat.toFixed(5) + ', ' + e.latlng.lng.toFixed(5);\n    if (pickMarker) map.removeLayer(pickMarker);\n    pickMarker = L.marker(e.latlng, { icon: dot('#eab308', 16) }).addTo(map);\n    var box = document.createElement('div');\n    box.className = 'lp-pop';\n    box.innerHTML = '<span style=\"color:#9ca3af\">' + c + '</span>';\n    box.appendChild(button('lp-ziel', 'Als Ziel übernehmen', 'Zielort', c));\n    box.appendChild(button('lp-start', 'Als Start übernehmen', 'Startort', c));\n    pickMarker.bindPopup(box, { closeButton: true }).openPopup();\n    pickMarker.on('popupclose', function () {\n      if (pickMarker) { map.removeLayer(pickMarker); pickMarker = null; }\n    });\n  });\n\n  if (!api) { document.getElementById('hint').textContent = 'aura-API fehlt (htmlApi aus?)'; return; }\n\n  var ids = ['Home_Lat', 'Home_Lon', 'Start_Lat', 'Start_Lon', 'Ziel_Lat', 'Ziel_Lon', 'Route_JSON', 'Startort'];\n  var cur = {};\n  function apply() {\n    home = pt(cur.Home_Lat, cur.Home_Lon);\n    startIsHome = !String(cur.Startort || '').trim();\n    start = startIsHome ? home : pt(cur.Start_Lat, cur.Start_Lon);\n    ziel = pt(cur.Ziel_Lat, cur.Ziel_Lon);\n    try { route = JSON.parse(cur.Route_JSON || '[]'); } catch (e) { route = []; }\n    draw();\n  }\n  var t = null;\n  function later() { clearTimeout(t); t = setTimeout(apply, 300); }\n\n  Promise.all(ids.map(function (id) { return api.getState(P + id); })).then(function (r) {\n    ids.forEach(function (id, i) { cur[id] = v(r[i]); });\n    apply();\n  }).catch(function () {});\n  ids.forEach(function (id) {\n    api.subscribe(P + id, function (a, b) { cur[id] = v(a, b); later(); });\n  });\n})();\n</script>\n",
+     "htmlApi": true,
+     "sandboxPreset": "standard",
+     "scrollable": false,
+     "fullscreenWidget": true,
+     "mobileHeight": "px",
+     "mobileHeightPx": 420
+    },
+    "mobileOrder": 6
+   },
+   {
+    "id": "w-lp-startort",
+    "type": "input",
+    "title": "Startort (leer = Zuhause)",
+    "datapoint": "0_userdata.0.Ladeplanung.Startort",
+    "layout": "default",
+    "gridPos": {
+     "x": 10,
+     "y": 21,
+     "w": 4,
+     "h": 3
+    },
+    "options": {
+     "icon": "mdi:home-map-marker",
+     "submitMode": "submit",
+     "showSubmit": true,
+     "placeholder": "leer = Zuhause",
+     "textAlign": "left"
+    },
+    "mobileOrder": 7
+   },
+   {
+    "id": "w-lp-favname",
+    "type": "input",
+    "title": "Favorit-Name (optional)",
+    "datapoint": "0_userdata.0.Ladeplanung.Favorit_Name",
+    "layout": "default",
+    "gridPos": {
+     "x": 14,
+     "y": 21,
+     "w": 4,
+     "h": 3
+    },
+    "options": {
+     "icon": "mdi:rename-outline",
+     "submitMode": "submit",
+     "showSubmit": true,
+     "placeholder": "z. B. Büro, Oma",
+     "textAlign": "left"
+    },
+    "mobileOrder": 8
+   }
+  ]
+ }
+}
